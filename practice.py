@@ -320,17 +320,18 @@ class Solution:
 
 # class Solution:
 #     def lengthOfLongestSubstring(self, s: str) -> int:
-#         charSet = set()
-#         l = 0
-#         res = 0
+#         charSet = set() # initialize set to make sure all characters are in our window
+#         l = 0 # left pter 
+#         result = 0
 
-#         for r in range(len(s)):
-#             while s[r] in charSet:
-#                 charSet.remove(s[l])
+#         for r in range(len(s)): # right pter continously changing as we visit each character
+#             while s[r] in charSet: # if a character already exists (duplicate) update our window
+#                 charSet.remove(s[l]) # take left character and remove it from our set
 #                 l += 1
 #             charSet.add(s[r])
-#             res = max(res, r - l + 1)
-#         return res
+#             result = max(result, r - l + 1)
+#         return result # length of longest substring 
+
 
 
 # 14. Longest Repeating Character Replacement (Medium)
@@ -340,21 +341,20 @@ class Solution:
 
 # class Solution:
 #     def characterReplacement(self, s: str, k: int) -> int:
-#         count = {}
-#         res = 0
+#         count = {} #hashmap to count the occurances of each character
+#         result = 0 # longest substring we can create with k replacements 
 
-#         l = 0
-#         maxf = 0
-#         for r in range(len(s)):
-#             count[s[r]] = 1 + count.get(s[r], 0)
-#             maxf = max(maxf, count[s[r]])
+#         l = 0 
+#         for r in range(len(s)): # right pter will go through every position in string s
+#             count[s[r]] = 1 + count.get(s[r], 0) #increment count. if the char doesnt exist default 0
+#             while (r - l + 1) - max(count.values()) > k:
+#                 count[s[l]] -= 1 # decrement the count at position l by 1
+#                 l += 1 # shift the left pointer to the right by 1
 
-#             if (r - l + 1) - maxf > k:
-#                 count[s[l]] -= 1
-#                 l += 1
 
-#             res = max(res, r - l + 1)
-#         return res
+#             result = max(result, r - l + 1) # size of window is r - l + 1
+#         return result
+
 
 # 15. Minimum Window Substring (Hard)
 # Question Link https://leetcode.com/problems/contains-duplicate/
@@ -456,20 +456,21 @@ class Solution:
 
 # class Solution:
 #     def findMin(self, nums: List[int]) -> int:
-#         res = nums[0]
-#         l, r = 0, len(nums) - 1
+#         result = nums[0] # can techinically be any value in the nums array 
+#         l, r = 0, len(nums) - 1 # left pter at index 0, right pter at the right most index
 
 #         while l <= r:
-#             if nums[l] < nums[r]:
-#                 res = min(res, nums[l])
+#             if nums[l] < nums[r]: # if the array is sorted already (sorted array)
+#                 result = min(result, nums[l])
 #                 break
-#             m = (l + r) // 2
-#             res = min(res, nums[m])
-#             if nums[m] >= nums[l]:
-#                 l = m + 1
+
+#             m = (l + r) // 2 # if the array is not sorted (rotated sorted array) we compute a mid pter
+#             result = min(result, nums[m])
+#             if nums[m] >= nums[l]: # we want to check if the mid pter is part of the left or right portion 
+#                 l = m + 1 # search right portion
 #             else:
-#                 r = m - 1
-#         return res
+#                 r = m - 1 # search left portion 
+#         return result 
 
                                                                     # LINKED LIST (0/6)
 
