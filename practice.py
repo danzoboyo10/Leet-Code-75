@@ -461,14 +461,14 @@ class Solution:
 
 # class Solution:
 #     def reverseList(self, head: ListNode) -> ListNode:
-#         prev, curr = None, head
+#          prev, curr = None, head # Initialize our two pters 
 
-#         while curr:
-#             temp = curr.next
-#             curr.next = prev
-#             prev = curr
-#             curr = temp
-#         return prev
+#         while curr: # we want to keep iterating until we reach the end of the list (while curr is not null)
+#             nxt = curr.next # temporary nxt variable pter 
+#             curr.next = prev # This reverses the pointers (the direction of the links)
+#             prev = curr # previous becomes the new head essentially 
+#             curr = nxt 
+#         return prev # result is stored in prev when this loop stops lo
 
 # 20. Merge Two Linked Lists (Easy)
 # Question Link https://leetcode.com/problems/merge-two-sorted-lists/
@@ -483,24 +483,24 @@ class Solution:
 
 # class Solution:
 #     def mergeTwoLists(self, list1: ListNode, list2: ListNode) -> ListNode:
-#         dummy = ListNode()
-#         tail = dummy
+        # dummy = ListNode() # to handle the edge case of an empty list, common technique of creating a dummy node with no value
+        # tail = dummy
 
-#         while list1 and list2:
-#             if list1.val < list2.val:
-#                 tail.next = list1
-#                 list1 = list1.next
-#             else:
-#                 tail.next = list2
-#                 list2 = list2.next
-#             tail = tail.next
+        # while list1 and list2: # while list1 and list2 are non null
+        #     if list1.val < list2.val:
+        #         tail.next = list1 # the next value in the tail will therefore be list1 
+        #         list1 = list1.next # update our list1 pter
+        #     else: # if list1.val > list2.val
+        #         tail.next = list2
+        #         list2 = list2.next
+        #     tail = tail.next # still need to update the tail pter regardless of which list node is added
 
-#         if list1:
-#             tail.next = list1
-#         elif list2:
-#             tail.next = list2
+        # if list1: # if list1 is non null will take the remaining portion and add it to the tail of the list
+        #     tail.next = list1
+        # elif list2: # if list2 is non null will take the remaining portion and add it to the tail 
+        #     tail.next = list2
 
-#         return dummy.next
+        # return dummy.next # return the merged list 
 
 
 
@@ -573,12 +573,12 @@ class Solution:
 
 # class Solution:
 #     def hasCycle(self, head: ListNode) -> bool:
-#         slow, fast = head, head
+#         slow, fast = head, head # two pters start same pos
 
-#         while fast and fast.next:
-#             slow = slow.next
-#             fast = fast.next.next
-#             if slow == fast:
+#         while fast and fast.next: #
+#             slow = slow.next # one shift
+#             fast = fast.next.next # two shifts
+#             if slow == fast: # if pters meet
 #                 return True
 #         return False
 
@@ -634,17 +634,20 @@ class Solution:
 #         self.right = right
 
 # class Solution:
-#     def invertTree(self, root: TreeNode) -> TreeNode:
-#         if not root:
-#             return None
-
-#         # swap the children
-#         tmp = root.left
-#         root.left = root.right
+#     def invertTree(self, root: Optional[TreeNode]) -> Optional[TreeNode]:
+#         # DFS
+     
+#         if not root: # If the root is null
+#             return None 
+        
+#         # If the root is not null, we're gonna swap the roots children
+#         tmp = root.left # tmp variable for root.left children
+#         root.left = root.right # Replace root.left w root.right to invert the children 
 #         root.right = tmp
-
-#         self.invertTree(root.left)
-#         self.invertTree(root.right)
+        
+#         self.invertTree(root.left) # To invert all the proceeding subtrees children, we make a recursive call
+#         self.invertTree(root.right) # To invert all the procreeding subtrees children, we make a recursive call
+        
 #         return root
 
 
@@ -652,51 +655,62 @@ class Solution:
 # Question Link https://leetcode.com/problems/maximum-depth-of-binary-tree/
 # Video Solution: https://www.youtube.com/watch?v=hTM3phVI6YQ
 # Python Solution:
-
-# RECURSIVE DFS
 # class Solution:
-#     def maxDepth(self, root: TreeNode) -> int:
-#         if not root:
-#             return 0
+#     def maxDepth(self, root: Optional[TreeNode]) -> int:
 
-#         return 1 + max(self.maxDepth(root.left), self.maxDepth(root.right))
-
-
-# ITERATIVE DFS
-# class Solution:
-#     def maxDepth(self, root: TreeNode) -> int:
-#         stack = [[root, 1]]
-#         res = 0
-
-#         while stack:
-#             node, depth = stack.pop()
-
-#             if node:
-#                 res = max(res, depth)
-#                 stack.append([node.left, depth + 1])
-#                 stack.append([node.right, depth + 1])
-#         return res
-
-
-# BFS
-# class Solution:
-#     def maxDepth(self, root: TreeNode) -> int:
-#         q = deque()
-#         if root:
-#             q.append(root)
-
-#         level = 0
+        # 3 main ways to solve 1.Recursive DFS (best solution)  2.Iterative BFS 3.Iterative DFS
         
-#         while q:
+        
+        # 1. Recursive DFS (in-order DFS)
+        if not root: # If the root is empty 
+            return 0 # Max depth will be zero
+        
+        else: 
+  # we are making a recursive call to see what the max depth is of root.left and root.right
+  # and it's plus b/c we know the root is not null so has to be a value of 1
+            return 1 + max(self.maxDepth(root.left), self.maxDepth(root.right))
+        
 
-#             for i in range(len(q)):
-#                 node = q.popleft()
-#                 if node.left:
-#                     q.append(node.left)
-#                 if node.right:
-#                     q.append(node.right)
-#             level += 1
-#         return level
+        # 2. Iterative BFS (basically level order traversal) (requires a queue)
+        
+        if not root: # same base case if root is null
+            return 0 
+        
+        level = 0 
+        
+        queue = deque([root]) # root value is the only val initially in the queue b/c root in non null
+        
+        while queue: # will keep iterating untill the queue is empty
+            
+            for i in range(len(queue)): # traverse the whole level
+                node = queue.popleft() # we are gonna pop a node
+                if node.left: # if node.left is not null
+                    queue.append(node.left) #  we will add node.left to the queue   
+                if node.right: # if node.right is not null
+                    queue.append(node.right) # we will add node.right to the queue
+                    
+                    
+            level += 1 # incrementing the number of levels
+        return level
+    
+    
+        # 3. Iterative DFS (DFS w/o recursion) (requires a stack) (pre-order DFS easiest one iteratively)
+         
+        if not root: # same base case 
+            return 0
+        
+        stack = [[root, 1]] # keeping track of root value, and the depth (has a val of 1 b/c root is not null)
+        result = 1
+        
+        while stack: # we will loop through while stack is not empty 
+            node, depth = stack.pop() # we're popping the node and it's depth 
+            
+            if node: # if node is not null
+                result = max(result, depth)
+                stack.append([node.left, depth + 1]) # we are adding the children of this node
+                stack.append([node.right, depth + 1]) # we are adding the children of this node
+        
+        return Result   
 
 
 
@@ -714,13 +728,17 @@ class Solution:
 
 
 # class Solution:
-#     def isSameTree(self, p: TreeNode, q: TreeNode) -> bool:
-#         if not p and not q:
+#     def isSameTree(self, p: Optional[TreeNode], q: Optional[TreeNode]) -> bool:
+#         if not p and not q: # if both p and q are null they are the same 
 #             return True
-#         if p and q and p.val == q.val:
-#             return self.isSameTree(p.left, q.left) and self.isSameTree(p.right, q.right)
-#         else:
+#         if not p or not q: # if one of the tree's is null and the other is not
 #             return False
+#         if p.val != q.val: # if the value of the root nodes are not eqaul to each other 
+#             return False
+
+        
+#         return (self.isSameTree(p.left, q.left) and # recursive call for the left and right subtrees 
+#                 self.isSameTree(p.right, q.right))
 
 
 
@@ -737,25 +755,32 @@ class Solution:
 #         self.right = right
 
 # class Solution:
-#     def isSubtree(self, s: TreeNode, t: TreeNode) -> bool:
-#         if not t:
+#     def isSubtree(self, root: Optional[TreeNode], subRoot: Optional[TreeNode]) -> bool:
+#         if not subRoot: # If the subroot is null it is a subtree of root
 #             return True
-#         if not s:
+#         if not root: # if the root tree is null (no nodes in it) then we return False
 #             return False
 
-#         if self.sameTree(s, t):
+#         if self.sameTree(root, subRoot): # if the trees are the exactly the same, we can return True 
 #             return True
-#         return self.isSubtree(s.left, t) or self.isSubtree(s.right, t)
 
-#     def sameTree(self, s, t):
-#         if not s and not t:
+#         return (self.isSubtree(root.left, subRoot) or # this checks if a subtree of the left or right is present 
+#                 self.isSubtree(root.right, subRoot))
+
+    
+#     def sameTree(self, root, subRoot): 
+#         if not root and not subRoot: # if both the root tree and subroot tree are empty, we can return True 
 #             return True
-#         if s and t and s.val == t.val:
-#             return self.sameTree(s.left, t.left) and self.sameTree(s.right, t.right)
-#         return False
+        
+#         if root and subRoot and root.val == subRoot.val: # if they are both non empty and their values equal each other 
+#             return (self.sameTree(root.left, subRoot.left) and # we check to see if the values of the left and right tree vals equal each other
+#                     self.sameTree(root.right, subRoot.right))
+        
+#         return False # this means the vals of the subtree does not equal the root tree vals for both the left and right 
 
 
-# 29. Lowest Common Ancestor of a BST (Easy)
+
+# 29. Lowest Common Ancestor of a BST (Medium)
 # Question Link https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-search-tree/
 # Video Solution: https://www.youtube.com/watch?v=gs2LMfuOR9k
 # Python Solution:
