@@ -72,16 +72,22 @@ from email.policy import default
 # Video Solution: https://www.youtube.com/watch?v=vzdNOK2oB2E
 # Python Solution:
 
-# class Solution:
-#     def groupAnagrams(self, strs: List[str]) -> List[List[str]]:
-#         ans = collections.defaultdict(list)
+class Solution:
+    def groupAnagrams(self, strs: List[str]) -> List[List[str]]:
+        result = defaultdict(list) # we are mapping the charCount of each string : list of anagrams
+        
+        for s in strs: # go through every string in the input
+            count = [0] * 26 # array of 26 zeros, 1 for each char in the alphabet a ... z
 
-#         for s in strs:
-#             count = [0] * 26
-#             for c in s:
-#                 count[ord(c) - ord('a')] += 1
-#             ans[tuple(count)].append(s)
-#         return ans.values()
+            for c in s: # go through every single character in each string 
+                count[ord(c) - ord("a")] += 1 # we want to map a to 0 and z to 25... 
+            
+            result[tuple(count)].append(s) # lists can't be keys in python 
+        
+        return result.values() # we just want the values (the lists of anagrams) not the keys
+
+        # O(m * n) where m is the number of strings we are given
+        # and n is avg length of each string (how many characters are in each string)
 
 
 
@@ -92,22 +98,21 @@ from email.policy import default
 
 # class Solution:
 #     def topKFrequent(self, nums: List[int], k: int) -> List[int]:
-#         count = {}
-#         freq = [[] for i in range(len(nums) + 1)]
+#         count = {} # use a hashmap to count the occurances of each character    
+# # special array, about the same size as input array (index is gonna be the count of the element, value is gonna be the list of vals that occur that many times)   
+#         frequency = [[] for i in range(len(nums) + 1)] # initialize empty array, and the number of empty arrays inside will be the length of nums array + 1
+#         for n in nums: # go through every val in the input array and see how many times it occurs 
+#             count[n] = 1 + count.get(n, 0) # default val of zero if n doesn't exist in our hashmap
+#         for n, c in count.items():  # Go through each val we counted. This will return each key val pair that we added to our dictionary # n is number, c is count 
+#             frequency[c].append(n) # this value n, occurs c many times 
 
-#         for n in nums:
-#             count[n] = 1 + count.get(n, 0)
-#         for n, c in count.items():
-#             freq[c].append(n)
+#         result = []  
+#         for i in range(len(frequency) - 1, 0, -1): # looking for top k elements so we go in descending order 
+#             for n in frequency[i]: # go through every value 
+#                 result.append(n)
+#                 if len(result) == k:
+#                     return result
 
-#         res = []
-#         for i in range(len(freq) - 1, 0, -1):
-#             for n in freq[i]:
-#                 res.append(n)
-#                 if len(res) == k:
-#                     return res
-
-        # O(n)
 
 
 # 6. Product of Array Except Self (medium)
@@ -117,17 +122,18 @@ from email.policy import default
 
 # class Solution:
 #     def productExceptSelf(self, nums: List[int]) -> List[int]:
-#         res = [1] * (len(nums))
+#         result = [0] * (len(nums)) # creating an output array, with a length of the input array. value [0] is arbitrary 
 
-#         prefix = 1
-#         for i in range(len(nums)):
-#             res[i] = prefix
+#         prefix = 1 # default val of 1 everything to left of the first val in the input array 
+#         for i in range(len(nums)): # iterate over the nums array 
+#             result[i] = prefix # we are assigning the output array "result" w the prefix values 
 #             prefix *= nums[i]
 #         postfix = 1
-#         for i in range(len(nums) - 1, -1, -1):
-#             res[i] *= postfix
+#         for i in range(len(nums) - 1, -1, -1): # start at the end of the input array and go up to the beginning 
+#             result[i] *= postfix # essentially multiplying the prefix values currently in the output array by the postfix
 #             postfix *= nums[i]
-#         return res
+#         return result
+
 
 
 
@@ -174,14 +180,14 @@ from email.policy import default
 
 # class Solution:
 #     def longestConsecutive(self, nums: List[int]) -> int:
-#         numSet = set(nums)
-#         longest = 0
+#         numSet = set(nums) # create set, pass in nums array as the constructor 
+#         longest = 0 # keep track of longest sequence, 
 
-#         for n in nums:
-#             # check if its the start of a sequence
-#             if (n - 1) not in numSet:
-#                 length = 1
-#                 while (n + length) in numSet:
+#         for n in nums: # iterate through every number in array
+#             # check if a number is the start of a sequence
+#             if (n - 1) not in numSet: # doesn't have left neighbor means its the start of a sequence 
+#                 length = 0 # we want to find the length of the sequence
+#                 while (n + length) in numSet: # n + length checks current number
 #                     length += 1
 #                 longest = max(length, longest)
 #         return longest
@@ -223,29 +229,34 @@ class Solution:
 # Question Link https://leetcode.com/problems/3sum/
 # Video Solution: https://www.youtube.com/watch?v=jzZsG8n2R9A
 # Python Solution:
-
 # class Solution:
 #     def threeSum(self, nums: List[int]) -> List[List[int]]:
-#         res = []
-#         nums.sort()
+#         result = [] # return the result as a list of lists
+#         nums.sort() 
 
-#         for i, a in enumerate(nums):
-#             if i > 0 and a == nums[i - 1]:
+#         for i, a in enumerate(nums): # i is the index, a is the value 
+#             if i > 0 and a == nums[i - 1]: # we don't want to reuse the value in the same position twice (i > 0 means it's not the first val in the index array)
+#             # a == nums[i - 1] means it's the same value as before 
 #                 continue
-
-#             l, r = i + 1, len(nums) - 1
-#             while l < r:
-#                 threeSum = a + nums[l] + nums[r]
-#                 if threeSum > 0:
+            
+#             # two pter solution to basically solve two sum 
+#             l, r = i + 1, len(nums) - 1 # len(nums) -1 will be the end of the list
+#             while l < r: # left and right can't be equal 
+#                 threeSum = a + nums[l] + nums[r] 
+#                 if threeSum > 0:  
 #                     r -= 1
 #                 elif threeSum < 0:
 #                     l += 1
 #                 else:
-#                     res.append([a, nums[l], nums[r]])
+#                     result.append([a, nums[l], nums[r]])
 #                     l += 1
 #                     while nums[l] == nums[l - 1] and l < r:
 #                         l += 1
-#         return res
+#         return result 
+
+
+                    # [-2, -2, 0, 0, 2, 2]
+
 
 
 # 11. Container with Most Water (Medium)
@@ -255,19 +266,33 @@ class Solution:
 
 # class Solution:
 #     def maxArea(self, height: List[int]) -> int:
-#         l, r = 0, len(height) - 1
-#         res = 0
+        # # Brute Force Solution
+        # result = 0
 
-#         while l < r:
-#             res = max(res, min(height[l], height[r]) * (r - l))
-#             if height[l] < height[r]:
-#                 l += 1
-#             elif height[r] <= height[l]:
-#                 r -= 1
-#         return res
+        # for l in range(len(height)): # left pter will be at every pos atleast once
+        #     for r in range(l + 1, len(height)):# right pter one pos to the right of left pter
+        #         area = (r - l) * min(height[l], height[r]) # width is (r - l), we need the bottleneck height
+        #         result = max(result, area)
+        # return result 
+
+        # Linear Time Solution O(n)
+
+        # result = 0 # area 
+        # l, r = 0, len(height) - 1
+
+        # while l < r:
+        #     area = (r - l) * min(height[l], height[r])
+        #     result = max(result, area)
+
+        #     if height[l] < height[r]:
+        #         l += 1 # we want to maximize both of the heights 
+        #     else: # if they're equal or left > right pter 
+        #         r -= 1
+        # return result
 
 
-                                                                  # SLIDING WINDOW (0/4)
+
+# SLIDING WINDOW (0/4)
 
 # 12. Best Time to Buy & Sell Stock (easy)
 # Question Link https://leetcode.com/problems/best-time-to-buy-and-sell-stock/
