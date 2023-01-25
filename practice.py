@@ -536,29 +536,36 @@ class Solution:
 # Python Solution: 
 
 # class Solution:
-#     def reorderList(self, head: ListNode) -> None:
-#         # find middle
-#         slow, fast = head, head.next
-#         while fast and fast.next:
-#             slow = slow.next
-#             fast = fast.next.next
+#     def reorderList(self, head: Optional[ListNode]) -> None:
+#         """
+#         Do not return anything, modify head in-place instead.
+#         """
 
-#         # reverse second half
-#         second = slow.next
-#         prev = slow.next = None
-#         while second:
-#             tmp = second.next
+#         slow, fast = head, head.next
+#         while fast and fast.next: # we're gonna keep going while fast is non null and fast has not reached the end of the entire list
+#             slow = slow.next # slow pter shifted by 1
+#             fast = fast.next.next # fast pter shifted by 2
+
+#         second = slow.next # second of the list now
+#         slow.next = None 
+#         prev = None
+        
+#         while second: # this loop reverses the second portion of the list
+#             tmp = second.next 
 #             second.next = prev
 #             prev = second
-#             second = tmp
+#             second = tmp 
 
-#         # merge two halfs
+
+#         # merge two halfs of the list
 #         first, second = head, prev
 #         while second:
 #             tmp1, tmp2 = first.next, second.next
 #             first.next = second
 #             second.next = tmp1
-#             first, second = tmp1, tmp2
+#             first = tmp1
+#             second = tmp2
+        
 
 
 # 22. Remove Nth Node from End of List (Medium)
@@ -567,22 +574,22 @@ class Solution:
 # Python Solution: 
 
 # class Solution:
-#     def removeNthFromEnd(self, head: ListNode, n: int) -> ListNode:
-#         dummy = ListNode(0, head)
-#         left = dummy
-#         right = head
+#     def removeNthFromEnd(self, head: Optional[ListNode], n: int) -> Optional[ListNode]:
+#         dummy = ListNode(0, head) # we don't care what the value is, but will say zero. the next pter will be pointing at head
+#         left = dummy # left pter assigned to dummy
+#         right = head # we want our right pter to be head + n, but head + n is invalid syntax in python (so we need a loop to do that)
 
-#         while n > 0:
-#             right = right.next
-#             n -= 1
+#         while n > 0 and right: # while n is greater than zero and right is not null 
+#             right = right.next # we want to keep shifting right 
+#             n -= 1 # decrement n by 1 (when n = 0, we've shifted n by the amount we want it to be shifted by)
 
-#         while right:
+#         while right: # shifting both pters now (left and right), we keep going until right reaches the end of the list 
 #             left = left.next
 #             right = right.next
-
+        
 #         # delete
-#         left.next = left.next.next
-#         return dummy.next
+#         left.next = left.next.next # 1 -> 2 -> 3 if left.next is 1 this would result to 1 -> 3
+#         return dummy.next # dummy.next is at the head our list (we don't wont to include dummy in our output) dummy.next in ex: 1 is 1
 
 
 # 23. Linked List Cycle (Easy)
@@ -820,14 +827,16 @@ class Solution:
 
 # class Solution:
 #     def lowestCommonAncestor(self, root: 'TreeNode', p: 'TreeNode', q: 'TreeNode') -> 'TreeNode':
-#         cur = root
-#         while cur:
+#         cur = root # we start at the root node 
+
+#         while cur: # we basically keep iterating until we find our result 
 #             if p.val > cur.val and q.val > cur.val:
 #                 cur = cur.right
 #             elif p.val < cur.val and q.val < cur.val:
-#                 cur = cur.left
-#             else:
+#                 cur = cur.left 
+#             else: # if a split occurs or basically finding one of the values p or q 
 #                 return cur
+        
 
 
 
@@ -844,24 +853,27 @@ class Solution:
 #         self.right = None
 
 # class Solution:
-#     def levelOrder(self, root: TreeNode) -> List[List[int]]:
-#         res = []
-#         q = collections.deque()
-#         if root:
-#             q.append(root)
+#     def levelOrder(self, root: Optional[TreeNode]) -> List[List[int]]:
+#         result = [] # initilize an array for the result 
 
-#         while q:
-#             val = []
+#         queue = collections.deque() # we need a queue for Breadth First Search (level order traversal)
+#         queue.append(root) # we want to initialize our queue with our root value (frist value)
 
-#             for i in range(len(q)):
-#                 node = q.popleft()
-#                 val.append(node.val)
-#                 if node.left:
-#                     q.append(node.left)
-#                 if node.right:
-#                     q.append(node.right)
-#             res.append(val)
-#         return res
+#         while queue: # while our queue is non empty 
+#             queueLen = len(queue) # number of nodes in our queue currently, this ensures we're iterating over one level at a time
+#             level = []
+#             for i in range(queueLen): # loop through every value in our queue currently 
+#                 node = queue.popleft() # pop from left FIFO -> first in first out 
+#                 if node: # if node is non null  
+#                     level.append(node.val) # append node value to the list level 
+#                     queue.append(node.left) # add the children of this node 
+#                     queue.append(node.right)
+#             if level: #if level is non empty (technically our queue can have null nodes, we don't want to add null nodes to our level)
+#                 result.append(level) # take our result and add every list level to it 
+        
+#         return result
+
+#     # O(n)
 
 
 # 31. Validate Binary Search Tree (Medium)
@@ -875,20 +887,24 @@ class Solution:
 #         self.val = val
 #         self.left = left
 #         self.right = right
+class Solution:
+    def isValidBST(self, root: Optional[TreeNode]) -> bool:
 
-# class Solution:
-#     def isValidBST(self, root: TreeNode) -> bool:
-#         def valid(node, left, right):
-#             if not node:
-#                 return True
-#             if not (node.val < right and node.val > left):
-#                 return False
+        def valid(node, left, right): # helper function, left and right boundaries 
+            if not node: # if node is null 
+                return True # technically an empty BST is a valid BST
+            
+            if not (node.val < right and node.val > left): # if the root node is not less than right child and greater than left child, we return False
+                return False # we found a node that broke our BST 
 
-#             return valid(node.left, left, node.val) and valid(
-#                 node.right, node.val, right
-#             )
-
-#         return valid(root, float("-inf"), float("inf"))
+            # makes sure left subtree and right subtree of node is valid through a recursive call  
+            return (valid(node.left, left, node.val) and # pass in node.left, left boundary is left, which is -inf (-inf < 3 < 5) and right boundary is the nodes value  
+                    valid(node.right, node.val, right)) # pass in node.right, left boundary is updated, right boundary stays the same (inf) i.e 5 < 7 < inf 
+                    
+                 
+        return valid(root, float("-inf"), float("inf")) 
+        # call the function pass in root, left boundary set to -inf and right boundary set to inf b/c root value can 
+        # be anything no restrictions 
 
 
 # 32. Kth Smallest Element in a BST (Medium)
@@ -904,19 +920,23 @@ class Solution:
 #         self.right = None
 
 # class Solution:
-#     def kthSmallest(self, root: TreeNode, k: int) -> int:
-#         stack = []
-#         curr = root
+#     def kthSmallest(self, root: Optional[TreeNode], k: int) -> int:
+#         # iterative in order traversal
+#         n = 0 # number of elements we visited in our tree
+#         stack = [] # need a stack for iterative in order traversal 
+#         cur = root # cur pter that will tell us which node we are currently visiting 
 
-#         while stack or curr:
-#             while curr:
-#                 stack.append(curr)
-#                 curr = curr.left
-#             curr = stack.pop()
-#             k -= 1
-#             if k == 0:
-#                 return curr.val
-#             curr = curr.right
+#         while cur or stack: # while cur or stack are non empty 
+#             while cur: # gonna keep going left 
+#                 stack.append(cur) # add root node to stack 
+#                 cur = cur.left 
+
+#             cur = stack.pop() # pop last element we added to our stack (b/c we reached null)
+#             n += 1 # this means we visited another node
+#             if n == k:
+#                 return cur.val
+#             cur = cur.right # if n == k is not in the left subtree, we go to the right subtree
+
 
 
 
@@ -925,16 +945,15 @@ class Solution:
 # Video Solution: https://www.youtube.com/watch?v=ihj4IQGZ2zc
 # Python Solution:
 # class Solution:
-    # def buildTree(self, preorder: List[int], inorder: List[int]) -> Optional[TreeNode]:
-    #     if not preorder or not inorder:
-    #         return None
-
-    #     root = TreeNode(preorder[0])
-    #     mid = inorder.index(preorder[0])
-    #     root.left = self.buildTree(preorder[1 : mid + 1], inorder[:mid])
-    #     root.right = self.buildTree(preorder[mid + 1 :], inorder[mid + 1 :])
-    #     return root
-
+#     def buildTree(self, preorder: List[int], inorder: List[int]) -> Optional[TreeNode]:
+#         if not preorder or not inorder: # ask Joel 
+#             return None
+          
+#         root = TreeNode(preorder[0]) # we create a tree node w the first val in the preorder array
+#         mid = inorder.index(preorder[0]) # find where the root node val is in the inorder array 
+#         root.left = self.buildTree(preorder[1:mid + 1], inorder[:mid]) # create the left subtree (recursively) 1 to mid
+#         root.right = self.buildTree(preorder[mid + 1:], inorder[mid + 1:]) #start at index mid to the end of the list
+#         return root
 
 # 34. Binary Tree Max Path Sum (Hard)
 # Question Link https://leetcode.com/problems/binary-tree-maximum-path-sum/
