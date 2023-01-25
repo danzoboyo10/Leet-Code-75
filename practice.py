@@ -14,13 +14,13 @@
 
 # class Solution:
 #     def containsDuplicate(self, nums: List[int]) -> bool:
-#         hashset = set()
+#         hashset = set() # initalize a hashset
 
-#         for n in nums:
-#             if n in hashset:
-#                 return True
-#             hashset.add(n)
-#         return False
+#         for n in nums: # iterate over nums array
+#             if n in hashset: # if n is in my hashset
+#                 return True # there is duplicate
+#             hashset.add(n) # else we add n to our hashset
+#         return False # no duplicate found 
 
 
 
@@ -34,15 +34,16 @@
 
 # class Solution:
 #     def isAnagram(self, s: str, t: str) -> bool:
-#         if len(s) != len(t):
+#         if len(s) != len(t): # if the length of s does not equal t we can immediatelty return false
 #             return False
 
-#         countS, countT = {}, {}
+#         countS, countT = {}, {} # initalize two empty hashmaps to keep track of the # of each char
 
-#         for i in range(len(s)):
-#             countS[s[i]] = 1 + countS.get(s[i], 0)
-#             countT[t[i]] = 1 + countT.get(t[i], 0)
-#         return countS == countT
+#         for i in range(len(s)): # we know the length of s and t are equal so we iterate over the len of s
+#             countS[s[i]] = 1 + countS.get(s[i], 0) # build our maps [s[i]] character is the key 
+#             countT[t[i]] = 1 + countT.get(t[i], 0) # .get special python function if the key doesnt exist we return a default val of 0  
+#         if countS == countT: # if the hashmaps have the same # of each char they are anagrams
+#           return True 
 
 
 
@@ -54,29 +55,16 @@
 
 # class Solution:
 #     def twoSum(self, nums: List[int], target: int) -> List[int]:
-#         prevMap = {}  # val -> index
+#         prevMap = {}  # val -> index # initialize empty hashmap to keep track of val and index
 
-#         for i, n in enumerate(nums):
-#             diff = target - n
-#             if diff in prevMap:
-#                 return [prevMap[diff], i]
-#             prevMap[n] = i
+#         for i, n in enumerate(nums): # i is the index, n is the val 
+#             diff = target - n # diff variable, 9 - 2, n is the val we are currently at
+#             if diff in prevMap: # if diff exists in our map 
+#                 return [prevMap[diff], i] # we can return diffs index and i the index we are at
+#             prevMap[n] = i # if diff is not in our map, we update our map, val of n with index i
 
 from curses.ascii import isalnum
 from email.policy import default
-
-
-def twoSum(self, nums: List[int], target: int) -> List[int]:
-    prevMap = {} # val : index
-
-    for i, n in enumerate(nums):
-        diff = target - n
-        if diff in prevMap:
-            return [prevMap[diff], i]
-        prevMap[n] = i
-    return
-
-
 
 # 4. Group Anagrams (medium)
 
@@ -210,23 +198,23 @@ def twoSum(self, nums: List[int], target: int) -> List[int]:
 
 class Solution:
     def isPalindrome(self, s: str) -> bool:
-        l, r = 0, len(s) - 1
+        l, r = 0, len(s) - 1 # left and right pters, 1st index, last index
         
-        while l < r:
-            while l < r and not self.alphanum(s[l]):
-                l += 1
-            while l < r and not self.alphanum(s[r]):
-                r -= 1
-            if s[l].lower() != s[r].lower():
-                return False
-            l += 1
-            r -= 1
+        while l < r: # while left pter is less than right pter 
+            while l < r and not self.alphanum(s[l]): # not self.alphanum(s[l]) i.e space char
+                l += 1 # we shift left pter to the right by 1
+            while l < r and not self.alphanum(s[r]): 
+                r -= 1 # we shift right pter to the left by 1
+            if s[l].lower() != s[r].lower(): # if a char at index r is diff from a char at index l
+                return False 
+            l += 1 # still need to update pters on each iteration (move left)
+            r -= 1 # move right by 1
         return True
 
     # Could write own alpha-numeric function
-    def alphanum(self, c):
+    def alphanum(self, c): # helper function 
         return (
-            ord("A") <= ord(c) <= ord("Z")
+            ord("A") <= ord(c) <= ord("Z") 
             or ord("a") <= ord(c) <= ord("z")
             or ord("0") <= ord(c) <= ord("9")
         )
@@ -388,10 +376,10 @@ class Solution:
 
 # class Solution:
     # def isValid(self, s: str) -> bool:
-    #     Map = {")": "(", "]": "[", "}": "{"}
-    #     stack = []
+    #     Map = {")": "(", "]": "[", "}": "{"} # closeToOpen Map 
+    #     stack = [] # initalize empty stack 
 
-    #     for c in s:
+    #     for c in s: 
     #         if c not in Map:
     #             stack.append(c)
     #             continue
@@ -401,8 +389,7 @@ class Solution:
 
     #     return not stack
 
-
-                                                              # BINARY SEARCH (0/2)
+# BINARY SEARCH (0/2)
 
 # 17. Search Rotated Sorted Array (Medium)
 # Question Link https://leetcode.com/problems/search-in-rotated-sorted-array/
@@ -1954,7 +1941,7 @@ class Solution:
 
 
 
-                                                                # MATH & GEOMETRY (0/3)
+  # MATH & GEOMETRY (0/3)
 
 
 # 68. Rotate Image (Medium)
