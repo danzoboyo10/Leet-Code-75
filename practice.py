@@ -276,13 +276,13 @@ class Solution:
 
 # class Solution:
 #     def maxProfit(self, prices: List[int]) -> int:
-#         res = 0
+#         res = 0 # inital max is 0
 
-#         l = 0
-#         for r in range(1, len(prices)):
-#             if prices[r] < prices[l]:
-#                 l = r
-#             res = max(res, prices[r] - prices[l])
+#         l = 0 # left pter at 0 
+#         for r in range(1, len(prices)): # right pter start at 1
+#             if prices[r] < prices[l]: # buy high sell low
+#                 l = r # shift left pter to right 
+#             res = max(res, prices[r] - prices[l]) # high - low = maxProf
 #         return res
 
 
@@ -375,19 +375,24 @@ class Solution:
 # Python Solution: 
 
 # class Solution:
-    # def isValid(self, s: str) -> bool:
-    #     Map = {")": "(", "]": "[", "}": "{"} # closeToOpen Map 
-    #     stack = [] # initalize empty stack 
+#     def isValid(self, s: str) -> bool:
+#         stack = []
+#         closeToOpen = {
+#             ")" : "(", "}" : "{", "]" : "[" 
+#         }
 
-    #     for c in s: 
-    #         if c not in Map:
-    #             stack.append(c)
-    #             continue
-    #         if not stack or stack[-1] != Map[c]:
-    #             return False
-    #         stack.pop()
+#         for c in s: # let's build our stack, then popping from it 
+#             if c in closeToOpen: # it means it's a closing parens (b/c every key in our map is a closing parens)
+#                 if stack and stack[-1] == closeToOpen[c]: # make sure stack is not empty and the closing parens mathches the opening
+#                     stack.pop()
+#                 else:
+#                     return False
+#             else:
+#                 stack.append(c)
 
-    #     return not stack
+#         return True if not stack else False
+
+
 
 # BINARY SEARCH (0/2)
 
